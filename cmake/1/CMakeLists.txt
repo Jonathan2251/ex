@@ -1,9 +1,17 @@
+# Demonstration for how to call bash command in cmake
+
+# rm -rf build; mkdir build; cd build
+# cmake ..  // no foobar.txt
+# make zoo  // generate foobar.txt
+# rm foobar.txt; make zoo // generate foobar.txt again
+
 # References:
 # https://gist.github.com/baiwfg2/39881ba703e9c74e95366ed422641609
 
 cmake_minimum_required(VERSION 3.10)
 project(water)
 
+# command cat not run on CMAKE_CURRENT_SOURCE_DIR, so need it on the following
 set(IN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/foo.txt ${CMAKE_CURRENT_SOURCE_DIR}/bar.txt)
 set(OUT_FILE "foobar.txt")
 
@@ -28,6 +36,7 @@ add_custom_target(zoo ALL
     VERBATIM
 )
 
+# CMAKE_CURRENT_SOURCE_DIR can be skipped
 file(GLOB LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/func1.cpp
                   func2.cpp
 )
@@ -35,6 +44,5 @@ file(GLOB LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/func1.cpp
 add_library(wa ${LIB_SRC})
 add_dependencies(wa zoo)
 
-add_executable(water ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+add_executable(water main.cpp)
 target_link_libraries(water wa)
-#add_dependencies(a.out water_lib)
