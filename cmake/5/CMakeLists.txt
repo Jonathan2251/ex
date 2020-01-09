@@ -21,6 +21,7 @@ foreach(t ${ALL_TARGETS})
 endforeach(t)
 
 # function ref. https://stackoverflow.com/questions/14375519/how-to-write-a-nice-function-that-passes-variables-by-reference
+# PARENT_SCOPE: https://cmake.org/cmake/help/latest/command/set.html#set-normal-variable
 function(get_targets arg targets)
   if (${arg} STREQUAL "")
     message("arg empty")
