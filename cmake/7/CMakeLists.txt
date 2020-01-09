@@ -11,6 +11,10 @@ function(stringappend varName)
   message("\$\{ARGV\}: ${ARGV}")
   message("\$\{ARGN\}: ${ARGN}")
 
+  foreach(arg IN LISTS ARGN)
+    message("\$\{arg\}: ${arg}")
+  endforeach()
+
   # after the following set varName is a list
   set(${varName} "${${varName}}" "${ARGN}" PARENT_SCOPE)
 endfunction()
