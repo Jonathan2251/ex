@@ -1,4 +1,4 @@
-# function and variables
+# string and list
 # cmake ..
 
 # https://stackoverflow.com/questions/13582282/cmake-difference-between-and
