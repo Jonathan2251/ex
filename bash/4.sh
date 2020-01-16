@@ -6,60 +6,12 @@
 TEST_CASES_DIR=/home/cschen/work/20200109/test_cases_v2_compiler/v011_conv/00001_8bit_3x3_base/
 
 DIR_COMPILE1=~/kncompiler/3/Kneron_Compiler/build/bin
+DIR_COMPILE2=~/kncompiler/1/kneron_piano/build/piano
 COMPILE1=$DIR_COMPILE1/compile
+COMPILE2=$DIR_COMPILE2/piano
 CSIM=~/kncompiler/kdp520_hw_csim/build/npu_sim 
 
-function Compile1()
-{
-    local model=$1
-    local cfg=$2
-    local log=compile.${f}.log
-    local compile_ret=0
-
-    printf "=> Compiling %-60s " $f
-
-    local str=$(date +"%s.%N")
-    echo "$COMPILE1 $model $cfg debug > $log"
-    $COMPILE1 $model $cfg debug > $log
-    compile_ret=$?
-    local end=$(date +"%s.%N")
-    local time=$(echo "$end $str" | awk '{ printf "%.2f", $1 - $2 }')
-
-    if [ $compile_ret = 0 ]; then
-        printf "SUCCESS [${time} sec]\n"
-    else
-        ret=$compile_ret
-        printf "FAILED\n"
-        egrep "\[error\]" $log
-        printf "\n\n"
-    fi
-}
-
-function Csim()
-{
-    local command_bin=$1
-    local weight_bin=$2
-    local input_bin=$3
-    local setup_bin=$4
-    local compile_ret=0
-
-    printf "=> Csim %-60s " $f
-
-    local str=$(date +"%s.%N")
-    echo "$CSIM --cmd $command_bin --weight $weight_bin --input $input_bin --setup $setup_bin"
-    $CSIM --cmd $command_bin --weight $weight_bin --input $input_bin --setup $setup_bin
-    csim_ret=$?
-    local end=$(date +"%s.%N")
-    local time=$(echo "$end $str" | awk '{ printf "%.2f", $1 - $2 }')
-
-    if [ $csim_ret = 0 ]; then
-        printf "SUCCESS [${time} sec]\n"
-    else
-        ret=$csim_ret
-        printf "FAILED\n"
-        printf "\n\n"
-    fi
-}
+source lib.sh
 
 ret=0
 
@@ -89,19 +41,49 @@ printf "\n"
 echo "${#jsons[@]}"
 echo "${#files[@]}"
 
+rm -rf dir1 dir2
+mkdir dir1 dir2
 for i in "${!jsons[@]}"
 do
     echo "${jsons[i]}"
     echo "${files[i]}"
     echo "${dirs[i]}"
-    Compile1 "${files[i]}" "${jsons[i]}"
+    rm -rf dir1/* dir2/*
+
+    pushd dir1
+    Compile1 ${files[i]} ${jsons[i]}
     if [ $ret != 0 ]; then
         exit 1;
     fi
+    popd
+
+    loglevel=1
+    logfile=log.txt
+    target=kdp520
+    pushd dir2
+    Compile2 ${files[i]} ${jsons[i]} $loglevel $logfile $target
+    popd
+
+    compile_out_files="command.bin command.txt setup.bin size_check weight.bin"
+    compare_out_files $compile_out_files
+
+    pushd dir1
     Csim "./command.bin" "./weight.bin" "${dirs[i]}/results/test_input.txt/mode_520/layer_0000_input_1_o0_fp.bin" "./setup.bin"
     if [ $ret != 0 ]; then
         exit 1;
     fi
+    popd
+
+    pushd dir2
+    Csim "./command.bin" "./weight.bin" "${dirs[i]}/results/test_input.txt/mode_520/layer_0000_input_1_o0_fp.bin" "./setup.bin"
+    if [ $ret != 0 ]; then
+        exit 1;
+    fi
+    popd
+    
+    csim_out_files="Lastlayer_final_output.bin Lastlayer_final_output_matrix.txt Lastlayer_final_output.txt node_0000_final_output.bin node_0000_final_output_matrix.txt node_0000_final_output.txt radix_scale_info.txt"
+    compare_out_files $csim_out_files
+
 done
 printf "\n"
 
