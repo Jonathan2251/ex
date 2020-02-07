@@ -17,10 +17,12 @@ abort_if_fail()
 
 compare_out_files()
 {
-    local files=$1
+    local files=("$@")
+    echo "${files[@]}"
 
-    for file in $files
-    do  
+    for file in "${files[@]}"
+    do 
+        echo "$file" 
         echo diff dir1/$file dir2/$file
         diff dir1/$file dir2/$file
         abort_if_fail;

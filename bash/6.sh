@@ -5,6 +5,9 @@
 
 function copyFiles() {
   arr=("$@")
+  echo "$@"
+  echo "$arr"
+  echo "${arr[@]}"
   for i in "${arr[@]}";
   do
     echo "$i"

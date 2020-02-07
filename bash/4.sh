@@ -2,13 +2,21 @@
 
 # "do compile test in $TEST_CASES_DIR"
 
-#TEST_CASES_DIR=/home/cschen/work/20200109/test_cases_v2_compiler/
-TEST_CASES_DIR=/home/cschen/work/20200109/test_cases_v2_compiler/v011_conv/00001_8bit_3x3_base/
+# 00028_8bit_dense_size.kdp520.scaled.onnx include not support format 1x8x7x3 input of Flatten, so skip test_cases_v2_compiler/v015_dense
+#TEST_CASES_DIR=/home/cschen/work/20200116/test_cases_v2_compiler/
+
+#fail
+#TEST_CASES_DIR=/home/cschen/work/20200116/test_cases_v2_compiler/v015_dense/00028_8bit_dense_size
+
+#pass
+TEST_CASES_DIR=/home/cschen/work/20200116/test_cases_v2_compiler/v011_conv/00001_8bit_3x3_base/
+
+#TEST_CASES_DIR=/home/cschen/work/20200116/test_cases_v2_compiler/v011_conv/
 
 DIR_COMPILE1=~/kncompiler/3/Kneron_Compiler/build/bin
-DIR_COMPILE2=~/kncompiler/1/kneron_piano/build/piano
+DIR_COMPILE2=~/kncompiler/3/kneron_piano/build/piano
 COMPILE1=$DIR_COMPILE1/compile
-COMPILE2=$DIR_COMPILE2/piano
+COMPILE2=$DIR_COMPILE2/beethevon
 CSIM=~/kncompiler/kdp520_hw_csim/build/npu_sim 
 
 source lib.sh
@@ -64,25 +72,25 @@ do
     Compile2 ${files[i]} ${jsons[i]} $loglevel $logfile $target
     popd
 
-    compile_out_files="command.bin command.txt setup.bin size_check weight.bin"
-    compare_out_files $compile_out_files
+    compile_out_files=("command.bin" "command.txt" "setup.bin" "size_check" "weight.bin")
+    compare_out_files "$compile_out_files"
 
     pushd dir1
-    Csim "./command.bin" "./weight.bin" "${dirs[i]}/results/test_input.txt/mode_520/layer_0000_input_1_o0_fp.bin" "./setup.bin"
+    Csim "./command.bin" "./weight.bin" "${dirs[$i]}/results/test_input.txt/mode_520/layer_0000_input_1_o0_fp.bin" "./setup.bin"
     if [ $ret != 0 ]; then
         exit 1;
     fi
     popd
 
     pushd dir2
-    Csim "./command.bin" "./weight.bin" "${dirs[i]}/results/test_input.txt/mode_520/layer_0000_input_1_o0_fp.bin" "./setup.bin"
+    Csim "./command.bin" "./weight.bin" "${dirs[$i]}/results/test_input.txt/mode_520/layer_0000_input_1_o0_fp.bin" "./setup.bin"
     if [ $ret != 0 ]; then
         exit 1;
     fi
     popd
     
-    csim_out_files="Lastlayer_final_output.bin Lastlayer_final_output_matrix.txt Lastlayer_final_output.txt node_0000_final_output.bin node_0000_final_output_matrix.txt node_0000_final_output.txt radix_scale_info.txt"
-    compare_out_files $csim_out_files
+    csim_out_files=("Lastlayer_final_output.bin" "Lastlayer_final_output_matrix.txt" "Lastlayer_final_output.txt" "node_0000_final_output.bin" "node_0000_final_output_matrix.txt" "node_0000_final_output.txt" "radix_scale_info.txt")
+    compare_out_files "$csim_out_files"
 
 done
 printf "\n"
