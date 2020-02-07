@@ -9,12 +9,18 @@ my_string="Ubuntu;Linux Mint;Debian;Arch;Fedora"
 my_array=($(echo $my_string | tr ";" "\n"))
 
 echo "size of my_array: ${#my_array[@]}" # 6 
-#echo "${#array[@]}"
 
 #Print the split string
 for i in "${my_array[@]}"
 do
     echo $i
+done
+
+#Print the split string
+for i in "${!my_array[@]}"
+do
+    element=${my_array[i]}
+    echo "$i: $element"
 done
 
 IFS=';' read -ra my_array2 <<< "$my_string"
