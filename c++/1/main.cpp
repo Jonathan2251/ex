@@ -7,22 +7,17 @@ using namespace std;
 #define CPU3 4
 
 #define ARCH (CPU1|CPU2)
+//#define ARCH CPU2
 
 int main() {
-  #if ARCH == CPU1
-    cout << "ARCH == CPU1\n";
-  #elif ARCH == CPU2
-    cout << "ARCH == CPU2\n";
-  #elif ARCH == CPU3
-    cout << "ARCH == CPU3\n";
-  #elif ARCH == (CPU1|CPU2)
-    cout << "ARCH == (CPU1|CPU2)\n";
-  #elif ARCH == (CPU1|CPU3)
-    cout << "ARCH == (CPU1|CPU3)\n";
-  #elif ARCH == (CPU2|CPU3)
-    cout << "ARCH == (CPU2|CPU3)\n";
-  #elif ARCH == (CPU1|CPU2|CPU3)
-    cout << "ARCH == (CPU1|CPU2|CPU3)\n";
+  #if (ARCH & CPU1) == CPU1
+    cout << "(ARCH & CPU1) CPU1\n";
+  #endif
+  #if (ARCH & CPU2) == CPU2
+    cout << "(ARCH & CPU2) CPU2\n";
+  #endif
+  #if (ARCH & CPU3) == CPU3
+    cout << "(ARCH & CPU3) CPU3\n";
   #endif
   cout << "ARCH = " << ARCH << endl;
   return 0;
