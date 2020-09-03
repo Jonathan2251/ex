@@ -7,7 +7,7 @@ using namespace std;
 #define CPU3 4
 
 #define ARCH (CPU1|CPU2)
-//#define ARCH CPU2
+#define ARCH2 CPU2
 
 int main() {
   #if (ARCH & CPU1) == CPU1
@@ -20,5 +20,13 @@ int main() {
     cout << "(ARCH & CPU3) CPU3\n";
   #endif
   cout << "ARCH = " << ARCH << endl;
+
+  #if ARCH2 == CPU1
+    cout << "ARCH2 == CPU1\n";
+  #endif
+  #if ARCH2 == CPU1 || ARCH2 == CPU2
+    cout << "ARCH2 == CPU1 || ARCH2 == CPU2\n";
+  #endif
+  cout << "ARCH2 = " << ARCH2 << endl;
   return 0;
 }
