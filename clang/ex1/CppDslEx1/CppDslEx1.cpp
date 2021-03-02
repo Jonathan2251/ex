@@ -112,14 +112,11 @@ bool MyASTVisitor::VisitStmt(Stmt *x) {
   if (!CurrFunc->hasAttr<C11NoReturnAttr>()) {
     return true;
   }
-  if (isa<DeclStmt>(x) || isa<ReturnStmt>(x)) {
-    for (auto it2 = x->child_begin(); it2 != x->child_end(); ++it2) {
-      if (auto callExpr = dyn_cast_or_null<CallExpr>(*it2)) {
-        FunctionDecl *FD = GetFunctionDecl(callExpr);
-        if (FD->getQualifiedNameAsString() == "A::abs") {
-          CodeGen.createBuiltinFunc(callExpr, Context, CurrFunc, FD);
-        }
-      }
+  // double result = A::abs(x); or result = A::abs(x) or return A::abs(x), ...
+  if (auto callExpr = dyn_cast_or_null<CallExpr>(x)) {
+    FunctionDecl *FD = GetFunctionDecl(callExpr);
+    if (FD->getQualifiedNameAsString() == "A::abs") {
+      CodeGen.createBuiltinFunc(callExpr, Context, CurrFunc, FD);
     }
   }
   return true;

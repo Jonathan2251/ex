@@ -10,3 +10,7 @@ __kernel void test(__global float *in, __global float *out)
     int index = get_global_id(0);
     out[index] = 3.14159f * in[index] + in[index];
 }
+
+int addone(int x) {
+  return  x+1;
+}
