@@ -1,4 +1,4 @@
-// clang ex1.cl -emit-llvm -S -o -
+// ~/llvm/10.0.0/release/build-cb/bin/clang++ -Xclang -load -Xclang /home/czs/llvm/10.0.0/release/build-cb/lib/CppDslEx1.so -Xclang -add-plugin -Xclang ex1-act -Xclang -emit-llvm -S ex1.cl -o -
 
 /* Header to make Clang compatible with OpenCL */
 #define __global __attribute__((address_space(1)))
