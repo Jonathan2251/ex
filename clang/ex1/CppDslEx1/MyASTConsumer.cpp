@@ -10,7 +10,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "CppDslEx1.h"
+#include "MyASTConsumer.h"
 #include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
@@ -122,14 +122,14 @@ bool MyASTVisitor::VisitStmt(Stmt *x) {
   return true;
 }
 
-MyConsumer::MyConsumer(CompilerInstance &CI)
+MyASTConsumer::MyASTConsumer(CompilerInstance &CI)
     : CodeGen(CI), Visitor(&CI.getASTContext(), CodeGen) {
-  llvm::dbgs() << "** Creating MyConsumer: " << "\n";
+  llvm::dbgs() << "** Creating MyASTConsumer: " << "\n";
 }
 
 // Override the method that gets called for each parsed top-level
 // declaration.
-bool MyConsumer::HandleTopLevelDecl(DeclGroupRef DR) {
+bool MyASTConsumer::HandleTopLevelDecl(DeclGroupRef DR) {
   for (DeclGroupRef::iterator b = DR.begin(), e = DR.end(); b != e; ++b) {
     // Traverse the declaration using our AST visitor.
     Visitor.TraverseDecl(*b);
@@ -137,33 +137,11 @@ bool MyConsumer::HandleTopLevelDecl(DeclGroupRef DR) {
   return true;
 }
 
-void MyConsumer::HandleTranslationUnit(clang::ASTContext &Context) {
+void MyASTConsumer::HandleTranslationUnit(clang::ASTContext &Context) {
 
   CodeGen.outputFile();
 }
 
-bool MyConsumer::TraverseDecl(Decl *D) {
+bool MyASTConsumer::TraverseDecl(Decl *D) {
   return Visitor.TraverseDecl(D);
 }
-
-
-std::unique_ptr<ASTConsumer>
-MyAction::CreateASTConsumer(CompilerInstance &CI,
-                            llvm::StringRef InFile) {
-  return std::make_unique<MyConsumer>(CI);
-}
-
-bool MyAction::ParseArgs(const CompilerInstance &CI,
-                         const std::vector<std::string> &args) {
-  return true;
-}
-
-// http://clang-developers.42468.n3.nabble.com/AST-modifications-that-apply-to-the-binary-td4054289.html
-MyAction::ActionType MyAction::getActionType() {
-  return AddBeforeMainAction;
-}
-
-bool MyAction::usesPreprocessorOnly() const { return false; }
-
-static FrontendPluginRegistry::Add<MyAction>
-    X("ex1-act", "convert cpp to cpp");

@@ -1,4 +1,4 @@
-//===- MyAction.h ---------------------------------------------===//
+//===- MyASTConsumer.h ---------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -11,14 +11,13 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_CLANG_EXAMPLE_CPPDSLEX1_H
-#define LLVM_CLANG_EXAMPLE_CPPDSLEX1_H
+#ifndef LLVM_CLANG_EXAMPLE_MYASTCONSUMER_H
+#define LLVM_CLANG_EXAMPLE_MYASTCONSUMER_H
 
 #include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Frontend/CompilerInstance.h"
-#include "clang/Frontend/FrontendPluginRegistry.h"
 #include "clang/Rewrite/Core/Rewriter.h"
 #include "clang/Sema/Sema.h"
 #include "llvm/Support/raw_ostream.h"
@@ -51,9 +50,9 @@ private:
   FunctionDecl *CurrFunc;
 };
 
-class MyConsumer : public clang::ASTConsumer {
+class MyASTConsumer : public clang::ASTConsumer {
 public:
-  explicit MyConsumer(CompilerInstance &CI);
+  explicit MyASTConsumer(CompilerInstance &CI);
   bool HandleTopLevelDecl(DeclGroupRef DR) override;
   void HandleTranslationUnit(clang::ASTContext &Context) override;
   bool TraverseDecl(Decl *D);
@@ -63,19 +62,6 @@ private:
   // order in constructor function for clang compiler
   MyCodeGen CodeGen;
   MyASTVisitor Visitor;
-};
-
-// MyAction is plugin, so after creating MyConsumer, the
-// plugin Action's members will be destroyed. Therefore no C++'s pointer or
-// reference should refer to Action.
-class MyAction : public PluginASTAction {
-protected:
-  std::unique_ptr<ASTConsumer>
-  CreateASTConsumer(CompilerInstance &CI, llvm::StringRef InFile) override;
-  bool ParseArgs(const CompilerInstance &CI,
-                 const std::vector<std::string> &args) override;
-  virtual ActionType getActionType() override;
-  bool usesPreprocessorOnly() const override;
 };
 
 #endif
