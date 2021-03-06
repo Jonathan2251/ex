@@ -23,5 +23,3 @@ make -j8 \
   LLVM_SRC_PATH=$HOME/llvm/10.0.0/release/src \
   LLVM_BUILD_PATH=$BINARY_DIR_PATH \
   LLVM_BIN_PATH=$BINARY_DIR_PATH/bin
-
-make LLVM_BIN_PATH=$BINARY_DIR_PATH/bin test

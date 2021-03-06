@@ -142,7 +142,7 @@ emit_build_config: make_builddir
 
 .PHONY: make_builddir
 make_builddir:
-	@echo "CLANG_INCLUDES: " ${CLANG_INCLUDES}
+#	@echo "CLANG_INCLUDES: " ${CLANG_INCLUDES}
 	@test -d $(BUILDDIR) || mkdir $(BUILDDIR)
 
 $(BUILDDIR)/CppDslEx2: CppDslEx2.cpp

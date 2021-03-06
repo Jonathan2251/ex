@@ -15,8 +15,8 @@
 #include "clang/Driver/Driver.h"
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "clang/Tooling/Tooling.h"
-#include "../ex1/CppDslEx1/MyASTConsumer.h"
-#include "../ex1/CppDslEx1/MyASTConsumer.cpp"
+#include "../1/CppDslEx1/MyASTConsumer.h"
+#include "../1/CppDslEx1/MyASTConsumer.cpp"
 
 using namespace clang;
 using namespace clang::driver;
