@@ -1,0 +1,8 @@
+﻿1. /usr/bin/clang -c 1.cpp -v   // get include path from mac
+2. ~/llvm/release/build/bin/clang -c 1.cpp -v
+
+3. add the following on:
+~/llvm/release/build/bin/clang <copy-from-2>+<the-following>
+
+// The following include paths get from 1
+-v -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/12.0.5 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include -stdlib=libc++ -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list
