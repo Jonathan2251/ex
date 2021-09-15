@@ -1,0 +1,15 @@
+FusionOper(x, fusionType) {
+  if (fusionType) {
+  }
+
+}
+
+FusionOper(x, typeB);
+SDRAM-Write();
+Relu();
+
+
+shape(n, c, h, w)
+
+
+not cache-coherihent
