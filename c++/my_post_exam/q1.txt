@@ -1,0 +1,18 @@
+[8/6 11:30 AM] Jonathan Chen
+    
+
+Given the following code segment:
+
+for i:=1 to 20 do if i>a+5
+
+then x:=x+2
+
+else y:=y-1;
+
+(a) Translate the code segment into abstract syntax trees
+
+(b) Write BNF (Bakus Naur Form) for above code
+
+(c) Write you parsing compiler code for (b) with yacc/lex or psudo hand code with left recursive
+
+
