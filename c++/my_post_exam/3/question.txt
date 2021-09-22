@@ -1,1 +1,6 @@
-Code to support 20 digits "add" operation.
+In simulator or compiler programming, sometimes we need to log the number that more-than-32-bits.
+Write a program to support 20 digits "add" operation.
+
+For example,
+(+102459981832441577303356) + (+800222888475144241606717) = 902682870307585818910073
+(+102459981832441577303356) + (-800222888475144241606717) = -697762906642702664303361

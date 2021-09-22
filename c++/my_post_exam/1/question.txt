@@ -1,5 +1,6 @@
-
-
+In compiler domain, the first step in scheduling for tasks or resources assigning may comes from knowing the possible combinations for sub-tasks.
+This can be reduced to POWER SET in mathmatic problem. Write a C++ program for POWER SET as follows,
+ 
 The POWER SET of ( a b c d e f )
 > Φ
 

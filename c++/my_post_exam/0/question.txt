@@ -1,13 +1,11 @@
-[8/6 11:30 AM] Jonathan Chen
-    
-
 Given the following code segment:
 
-for i:=1 to 20 do if i>a+5
-
-then x:=x+2
-
-else y:=y-1;
+for i:=1 to 20 do
+  if i>a+5
+  then 
+    x:=x+2
+  else
+    y:=y-1;
 
 (a) Translate the code segment into abstract syntax trees
 

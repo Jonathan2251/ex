@@ -1,4 +1,6 @@
-Read an article from input file, in.txt, and adjust it to 60 charactors each line with insert blank between words.
+The simple multi-core scheduling question can be reduced to article alignment question as follows,
+
+(a). Read an article from input file, in.txt, and adjust it to 60 charactors each line with insert blank between words.
 Then output to terminal screen.
 Remember do not truncate words with inserting too many blanks.
 
@@ -19,3 +21,5 @@ days. On Main Street a sow and her litter of pigs might root
 along  the  wooden sidwal, sharing the deeply rutted roadway
 with  foraging  hens  and  a  hound  languidly cratching his
 fleas.
+
+(b). Assume word is a serial of continuous jobs, (for example town include 4 jobs), and blank is idle(or context switch). Each line assigning to one-core processor, print the number of blanks for each core processor. For example first core processor include 13 blanks. Print the number of blanks for each core processor.
