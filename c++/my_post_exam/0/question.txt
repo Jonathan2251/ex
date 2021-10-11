@@ -1,28 +1,68 @@
-Write left resursive parser with the following BNF (Bakus Naur Form) and output the assembly for the input
+(1). Write left resursive parser with the following BNF (Bakus Naur Form) and output the assembly for the input
 
 S -> StmtList
 StmtList -> Stmt ; StmtList | Stmt
 Stmt -> ForStmt | AssignStmt
-ForStmt -> "for" Var ":=" Int "to" Int "do" AssignStmt
+ForStmt -> "for" Var ":=" Int "to" Int "{" StmtList "}"
 Var -> {a..z}
 Int -> {0..9}
 AssignStmt -> Var ":=" Expr
-Expr -> Var "+" Int
+Expr -> Var "+" Int | Var "*" Int
 
 input:
 
 x:=0;
-for i:=1 to 20 do
-  x:=x+2;
+y:=2;
+for i:=1 to 20 {
+  x:=x*2;
+  y:=y+2;
+}
+return x;
 
-output:
+output (llvm IR):
 
-  mov i, 1
-  mov x, 0
-loop1:
-  bgt i, 20
-  addi x, 2
-  addi i, 1
-  jump loop1
-  ret
+  %x = alloca i32, align 4
+  %y = alloca i32, align 4
+  %i = alloca i32, align 4
+  store i32 1, i32* %i, align 4
+  store i32 0, i32* %x, align 4
+  store i32 2, i32* %y, align 4
+l1:
+  %icmp = icmp eq i32 %i, 20
+  br i1 %icmp, label %l2, label %l3
+l2:
+  %x2 = mul i32 %x, 2
+  %y2 = add i32 %y, 2
+  %i2 = add i32 %i, 1
+  br label %l1
+l3:
+  ret i32 %x
 
+(2). Extend your code from (1) and create DAG before CodeGen and apply it to remove dead variables and instructions, 
+then do register allocation (x:$r0, i:$r1, y:dead variable), then output the following asm,
+
+output (asm):
+
+  addiu $sp, $sp, -12
+  mov $r0, 0
+  mov $r1, 1
+l1:
+  bgt $r1, 20
+  muli $r0, 2
+  addi $r1, 1
+  jump l1
+  ret $r0
+
+(3). Extend your code from (2) and apply Reduction in Strength then output the following,
+
+output (asm):
+
+  addiu $sp, $sp, -12
+  mov $r0, 0
+  mov $r1, 1
+l1:
+  bgt $r1, 20
+  shl $r0, 2
+  addi $r1, 1
+  jump l1
+  ret $r0
