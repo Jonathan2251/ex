@@ -24,4 +24,5 @@ loop1:
   addi x, 2
   addi i, 1
   jump loop1
+  ret
 
