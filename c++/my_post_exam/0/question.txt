@@ -1,16 +1,27 @@
-Given the following code segment:
+Write left resursive parser with the following BNF (Bakus Naur Form) and output the assembly for the input
 
+S -> StmtList
+StmtList -> Stmt ; StmtList | Stmt
+Stmt -> ForStmt | AssignStmt
+ForStmt -> "for" Var ":=" Int "to" Int "do" AssignStmt
+Var -> {a..z}
+Int -> {0..9}
+AssignStmt -> Var ":=" Expr
+Expr -> Var "+" Int
+
+input:
+
+x:=0;
 for i:=1 to 20 do
-  if i>a+5
-  then 
-    x:=x+2
-  else
-    y:=y-1;
+  x:=x+2;
 
-(a) Translate the code segment into abstract syntax trees
+output:
 
-(b) Write BNF (Bakus Naur Form) for above code
-
-(c) Write you parsing compiler code for (b) with yacc/lex or psudo hand code with left recursive
-
+  mov i, 1
+  mov x, 0
+loop1:
+  bgt i, 20
+  addi x, 2
+  addi i, 1
+  jump loop1
 
