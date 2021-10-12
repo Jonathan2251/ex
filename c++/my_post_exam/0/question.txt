@@ -36,7 +36,7 @@ l2:
   %i2 = add i32 %i, 1
   br label %l1
 l3:
-  ret i32 %x
+  ret i32 %x2
 
 (2). Extend your code from (1) and create DAG before CodeGen and apply it to remove dead variables and instructions, 
 then do register allocation (x:$r0, i:$r1, y:dead variable), then output the following asm,
