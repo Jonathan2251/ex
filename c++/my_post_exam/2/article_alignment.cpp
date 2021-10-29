@@ -1,3 +1,10 @@
+/*
+Finish (a) junior, finish (b) senior
+
+
+total characters: 38+48+49+54+46+49+6=290
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -5,6 +12,38 @@
 
 using namespace std ;
 
+char inStr[] = 
+"The town revolved around the river. In \
+summer, when the blazing sun beat down, it dozed \
+under the weight of sultry days. On Main Street a \
+sow and her litter of pigs might root along the wooden \
+sidwal, sharing the deeply rutted roadway with \
+foraging hens and a hound languidly cratching his \
+fleas.";
+
+void createInputFile(const char *fileName) {
+  ofstream outFile(fileName);
+  outFile << inStr;
+  outFile.close();
+}
+
+void dumpInputFile(const char *fileName) {
+  ifstream  inFile(fileName) ;
+  string  words[1000] ;
+
+  // char_no : character number
+  // wd      : index in words
+  int char_no , wd ;
+
+  wd = char_no = 0 ;
+  while ( inFile >> words[wd] ) {
+    wd++;
+  };
+
+  for (int i = 0; i < wd; i++) {
+    cout << words[i] << endl;
+  }
+}
 
 struct numberline {
        int no ;
@@ -90,6 +129,8 @@ int main() {
 
     cout << numberline(width) << endl ;
 
+    createInputFile("in.txt");
+    //dumpInputFile("in.txt");
     reset_paragraph_width( file , width ) ;
 
     return 0 ;
