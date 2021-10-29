@@ -1,12 +1,5 @@
-The simple multi-core scheduling question can be reduced to article alignment question as the following meaning,
-
-Assume word is a serial of continuous jobs, (for example town include 4 jobs), and blank is idle(or context switch). 
-Whole article assigning to multi-cores processor.
-
-(a). Treat the article as a serail of jobs and schedule it on multi-cores of 60 characters at maximum. 
-i.e. reading an article from input file, in.txt, and adjust it to 60 charactors each line with insert blank between words.
-Then output to terminal screen.
-Remember do not truncate words with inserting too many blanks.
+(a). Reading an article from input file, in.txt, and adjust it to 60 charactors each line with insert blank between words.
+Remember do not truncate words.
 
 For example:
 
@@ -27,13 +20,12 @@ along  the  wooden sidwal, sharing the deeply rutted roadway
 with  foraging  hens  and  a  hound  languidly cratching his
 fleas.
 
-(b). Schedule it on 6-cores with load blance. It is same to print the whole article as the follows,
+(b). 60 charactors each line at maximum on 6 lines and the charactors in each line is as close as possible.
 
 input:
 Same as (a).
 
-output: 
-(60 charactors each line at maximum on 6 lines and the charactors in each line is as close as possible and insert blanks between words) : 
+output:
 The town revolved around the river. In summer, when
 the  blazing  sun  beat  down,  it  dozed under the
 weight of sultry days. On Main Street a sow and her
