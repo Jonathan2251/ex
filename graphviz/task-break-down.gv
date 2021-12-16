@@ -1,0 +1,15 @@
+// dot task-break-down.gv task-break-down.png
+digraph G {
+
+  rankdir=LR;
+  LLC -> CodGen;
+  CodGen -> matmul;
+  CodGen -> ToRunTime
+  LLC -> Optimization;
+  Optimization -> HW;
+  Optimization -> RISCV;
+  HW -> ISA;
+  HW -> Cache;
+  Cache -> Size;
+  Cache -> X_ways;
+}
