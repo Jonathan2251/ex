@@ -1,0 +1,32 @@
+// dot -Tpng llc.gv -o llc.png
+digraph G {
+  rankdir=LR;
+
+  subgraph cluster_1 {
+    style=filled;
+    color=lightgrey;
+    label = "Lightelligence LLC structure\n";
+    node [shape="",style=filled,color=white]; ISA,Matmul,XYDim,Bits,
+        HW,RISCV,Cache,Size,X_ways,Blocksize;
+    node [shape=box,style=filled,color=green]; LLC;
+    node [shape=box,style=filled,color=lightgreen]; CodGen,Optimization;
+    node [shape=doubleoctagon,style=filled,color=white]; TVM,ONNC,RunTime,Machine;
+    TVM -> LLC [ label = "llvm-ir" ];
+    ONNC -> LLC [ label = "llvm-ir" ];
+    LLC -> CodGen;
+    CodGen -> ISA;
+    ISA -> Matmul;
+    Matmul -> XYDim;
+    Matmul -> Bits;
+    CodGen -> RunTime [ label = "json" ]; 
+    CodGen -> Machine [ label = "elf" ]; 
+    LLC -> Optimization;
+    Optimization -> HW;
+    Optimization -> RISCV;
+    HW -> ISA;
+    HW -> Cache;
+    Cache -> Size;
+    Cache -> X_ways;
+    Cache -> Blocksize;
+  }
+}
