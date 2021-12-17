@@ -1,10 +1,10 @@
-// dot task-break-down.gv task-break-down.png
+// dot -Tpng llc-s.gv -o llc-s.png
 digraph G {
 
   rankdir=LR;
   LLC -> CodGen;
-  CodGen -> matmul;
-  CodGen -> ToRunTime
+  CodGen -> Matmul;
+  CodGen -> RunTime [ label = "json" ];
   LLC -> Optimization;
   Optimization -> HW;
   Optimization -> RISCV;
