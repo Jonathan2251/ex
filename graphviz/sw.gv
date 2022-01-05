@@ -1,0 +1,31 @@
+// dot -Tpng sw.gv -o sw.png
+digraph G {
+  rankdir=LR;
+
+  subgraph cluster_1 {
+    style=filled;
+    color=lightgrey;
+    label = "Stage-1 SW dependence\n";
+
+    node [shape=box,style=filled,color=lightgreen]; 
+      TVMRT [label="TVM/DLR Run time Libraries"]; RISCV;SystemC;LLVM;TVM; 
+    node [shape=box,style=filled,color=lightyellow]; 
+      ONNC;
+
+    node [shape="",style=filled,color=white]; 
+
+    Pytorch -> ONNC;
+    Tensorflow -> ONNC;
+    ONNC -> TVM;
+    ONNC -> NNAPI;
+    ONNC -> RISCV;
+    ONNC -> Matmul_HW;
+    NNAPI -> TVMRT;
+    TVM -> LLVM;
+    TVMRT -> LLVM;
+    LLVM -> RISCV;
+    RISCV -> SystemC;
+    Matmul_HW -> Imperis;
+  }
+}
+
