@@ -5,12 +5,11 @@ digraph G {
   subgraph cluster_1 {
     style=filled;
     color=lightgrey;
-    label = "ONNC structure\n";
+    label = "ONNC structure\n\nONNC Optimization -> Cache-size, LLC -> All ?";
     node [shape="",style=filled,color=white]; ISA,Matmul,XYDim,Bits,
         HW,RISCV,Cache,Size,X_ways,Blocksize;
-    node [shape=box,style=filled,color=green]; ONNC;
-    node [shape=box,style=filled,color=lightyellow]; Configurable [label="Configurable for HW and NoC"];
-    node [shape=box,style=filled,color=lightgreen]; CodGen,Optimization;
+    node [shape=box,style=filled,color=lightgreen]; Configurable [label="Configurable for HW and NoC"];
+    node [shape=box,style=filled,color=lightyellow]; ONNC,CodGen,Optimization;
     node [shape=doubleoctagon,style=filled,color=white]; Pytorch,Tensorflow,RunTime,Machine;
     Pytorch -> ONNC;
     Tensorflow -> ONNC;
