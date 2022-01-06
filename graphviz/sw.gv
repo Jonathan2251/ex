@@ -7,8 +7,13 @@ digraph G {
     color=lightgrey;
     label = "Stage-1 SW dependence\n";
 
+    node [shape=record,style=filled,color=white]; 
+      SystemC [
+        label = "<f0> SystemC | <f1> Matmul"
+        shape = "record"
+      ];
     node [shape=box,style=filled,color=lightgreen]; 
-      TVMRT [label="TVM/DLR Run time Libraries"]; RISCV;SystemC;LLVM;TVM; 
+      TVMRT [label="TVM/DLR Run time Libraries"]; RISCV;LLVM;TVM; 
     node [shape=box,style=filled,color=lightyellow]; 
       ONNC;
 
@@ -18,14 +23,13 @@ digraph G {
     Tensorflow -> ONNC;
     ONNC -> TVM;
     ONNC -> NNAPI;
-    ONNC -> RISCV;
-    ONNC -> Matmul_HW;
+    ONNC -> SystemC:f1;
+    ONNC -> Imperis;
     NNAPI -> TVMRT;
     TVM -> LLVM;
     TVMRT -> LLVM;
     LLVM -> RISCV;
-    RISCV -> SystemC;
-    Matmul_HW -> Imperis;
+    RISCV -> SystemC:f0;
   }
 }
 
