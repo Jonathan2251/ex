@@ -1,0 +1,38 @@
+// dot -Tpng simu.gv -o simu.png
+
+// ref. TLM, https://www.accellera.org/community/systemc/about-systemc-tlm
+// ref. http://nvdla.org/
+
+digraph G {
+  rankdir=LR;
+
+  subgraph cluster_1 {
+    style=filled;
+    color=lightgrey;
+    label = "Stage-1 Simulators\n\nGreenSocs: Sycle accurate, full sytem simulator (with cache miss)?\n";
+
+    node [shape=record,style=filled,color=white]; 
+      SystemC [
+        label = "<f0> SystemC | <f1> Matmul"
+        shape = "record"
+      ];
+    TLM [label="TLM2.0"];
+    node [shape=box,style=filled,color=lightgreen]; 
+      Skip [label="..."]; RISCV; 
+    node [shape=box,style=filled,color=lightyellow]; 
+      ONNC; GreenSocs; NVDLA;
+
+    node [shape="",style=filled,color=white]; 
+
+    ONNC -> Skip;
+    ONNC -> SystemC:f1;
+    ONNC -> Imperis;
+    Skip -> RISCV;
+    RISCV -> SystemC:f0;
+    RISCV -> Imperis;
+    RISCV -> TLM;
+    TLM -> GreenSocs;
+    TLM -> NVDLA;
+  }
+}
+
