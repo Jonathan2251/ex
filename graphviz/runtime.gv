@@ -1,0 +1,30 @@
+// dot -Tpng runtime.gv -o runtime.png
+
+digraph G {
+  rankdir=LR;
+
+  subgraph cluster_1 {
+    style=filled;
+    color=lightgrey;
+    label = "engineers job for run time\n\n";
+
+    node [shape=record,style=filled,color=yellow]; 
+      HR [
+        label = "<f0> Host run time | <f1> Linux user program"
+        shape = "record"
+      ];
+    node [shape=record,style=filled,color=white]; 
+      Driver [
+        label = "<f0> Linux kernel mode driver | <f1> Linux machine"
+        shape = "record"
+      ];
+      TR [
+        label = "<f0> Target run time | <f1> Andes' TVM Runtime Libraries (DLR) | <f2> PE"
+        shape = "record"
+      ];
+
+    HR:f0 -> Driver:f0;
+    Driver:f0 -> TR:f0;
+  }
+}
+
