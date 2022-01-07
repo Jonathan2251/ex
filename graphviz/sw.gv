@@ -21,6 +21,7 @@ digraph G {
 
     Pytorch -> ONNC;
     Tensorflow -> ONNC;
+    ONNX -> ONNC [label="https://github.com/onnx/models (support all?)"];
     ONNC -> TVM;
     ONNC -> NNAPI;
     ONNC -> RunTimeAPI;
@@ -31,6 +32,7 @@ digraph G {
     TVMRT -> LLVM;
     LLVM -> RISCV;
     RISCV -> SystemC:f0;
+    RISCV -> Imperis;
   }
 }
 
