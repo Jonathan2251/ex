@@ -10,9 +10,10 @@ digraph G {
         HW,RISCV,Cache,Size,X_ways,Blocksize;
     node [shape=box,style=filled,color=lightgreen]; Configurable [label="Configurable for HW and NoC"];
     node [shape=box,style=filled,color=lightyellow]; ONNC,CodGen,Optimization;
-    node [shape=doubleoctagon,style=filled,color=white]; Pytorch,Tensorflow,RunTime,Machine;
+    node [shape=doubleoctagon,style=filled,color=white]; Pytorch,Tensorflow,ONNX,RunTime,Machine;
     Pytorch -> ONNC;
     Tensorflow -> ONNC;
+    ONNX -> ONNC;
     ONNC -> CodGen;
     CodGen -> ISA;
     ISA -> Matmul;
