@@ -1,0 +1,50 @@
+// dot -Tpng sow.gv -o sow.png
+digraph G {
+
+  rankdir=LR;
+
+  subgraph S0 {
+    label = "Get Code";
+    node [shape=box]; ONNC_FE [label="ONNC Frontend"]; ONNC_BE [label="ONNC Backend"];
+  }
+
+  subgraph S1 {
+    label = "Select Frame";
+    node [shape=doubleoctagon]; Pytorch,Tensorflow,ONNX;
+  }
+
+  subgraph S3 {
+    label = "Define Intrinsic";
+  }
+
+  subgraph S4 {
+    label = "CodeGen";
+    node [shape=box]; BitGen [label="bit-true generator"]; PseudoRunTime [label="ONNC Pseudo Run Time"];
+    node [shape=box]; Simulator;
+  }
+
+  node [shape=box]; S5 [label="Stage-5:確認ONNC編譯器的正確性。\n客戶的預選模型都能翻譯成\nCPU與NPU能夠直接執行的library call，\n並且透過簡單的方式進行CPU與NPU的溝通。\n驗收方式是在能夠執行的模擬器上，\n以layer-by-layer與whole model的方式執行。\n模擬器可能是C model或者Virtual Platform之一。"];
+  node [shape=box]; Check [label="Stage-6: Double Check"];
+
+  Pytorch -> ONNC_FE;
+  Tensorflow -> ONNC_FE;
+  ONNX -> ONNC_FE;
+  ONNC_FE -> ONNC_BE [label="ONNC-IR"]; // stage 2
+  ONNC_FE -> "CPU/TVM" [label="Subgraph"]; // stage 2
+  ONNC_FE -> "NPU" [label="Subgraph"]; // stage 2
+
+  ONNC_BE -> BitGen [label="Intrinsic"]; // stage 3
+
+  BitGen -> Simulator [label="bin"]; // stage 4
+  BitGen -> PseudoRunTime [label="bin"]; // stage 4
+
+  Simulator -> Check; // stage 6
+  PseudoRunTime -> Check; // stage 6
+
+  "CPU/TVM" -> S5;
+  "NPU" -> S5;
+
+  Simulator -> Calibration [label="result"]; // stage 7
+
+  Calibration -> ONNC_FE [style=dashed];
+}
