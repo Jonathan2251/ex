@@ -5,7 +5,7 @@ digraph G {
   subgraph cluster_1 {
     style=filled;
     color=lightgrey;
-    label = "Stage-1 SW dependence\n\nImperas:(MultiPE):configurable, next stage\nNNAPI:needless, call TVM instead";
+    label = "Stage-1 SW dependence";
 
     node [shape=record,style=filled,color=white]; 
       SystemC [
@@ -17,6 +17,9 @@ digraph G {
     node [shape=box,style=filled,color=lightyellow]; 
       ONNC; NNAPI [shape=box,color=lightgreen]
 
+    node [shape=box,style=filled,color=lightblue];
+      NoteNNLib [label="Dynamic shape, ..., etc, -> better"]; 
+      NoteImperas [label="(MultiPE):configurable, next stage"]; 
     node [shape="",style=filled,color=white]; 
 
     Pytorch -> ONNC;
@@ -27,12 +30,15 @@ digraph G {
     ONNC -> RunTimeAPI;
     ONNC -> SystemC:f1;
     ONNC -> Imperas;
+    NNAPI -> NNLib;
+    NNLib -> NoteNNLib;
     RunTimeAPI -> TVMRT;
     TVM -> LLVM;
     TVMRT -> LLVM;
     LLVM -> RISCV;
     RISCV -> SystemC:f0;
     RISCV -> Imperas;
+    Imperas -> NoteImperas;
   }
 }
 
