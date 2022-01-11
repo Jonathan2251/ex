@@ -26,10 +26,10 @@ digraph G {
 
     ONNC -> Skip;
     ONNC -> SystemC:f1;
-    ONNC -> Imperis;
+    ONNC -> Imperas;
     Skip -> RISCV;
     RISCV -> SystemC:f0;
-    RISCV -> Imperis;
+    RISCV -> Imperas;
     RISCV -> TLM;
     TLM -> GreenSocs;
     TLM -> NVDLA;

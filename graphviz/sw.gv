@@ -5,7 +5,7 @@ digraph G {
   subgraph cluster_1 {
     style=filled;
     color=lightgrey;
-    label = "Stage-1 SW dependence\n\nImperis:(MultiPE):configurable, next stage\nNNAPI:needless, call TVM instead";
+    label = "Stage-1 SW dependence\n\nImperas:(MultiPE):configurable, next stage\nNNAPI:needless, call TVM instead";
 
     node [shape=record,style=filled,color=white]; 
       SystemC [
@@ -26,13 +26,13 @@ digraph G {
     ONNC -> NNAPI;
     ONNC -> RunTimeAPI;
     ONNC -> SystemC:f1;
-    ONNC -> Imperis;
+    ONNC -> Imperas;
     RunTimeAPI -> TVMRT;
     TVM -> LLVM;
     TVMRT -> LLVM;
     LLVM -> RISCV;
     RISCV -> SystemC:f0;
-    RISCV -> Imperis;
+    RISCV -> Imperas;
   }
 }
 
