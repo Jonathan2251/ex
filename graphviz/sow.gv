@@ -23,7 +23,8 @@ digraph G {
     node [shape=box]; Simulator;
   }
 
-  node [shape=box]; S5 [label="Stage-5:確認ONNC編譯器的正確性。\n客戶的預選模型都能翻譯成\nCPU與NPU能夠直接執行的library call，\n並且透過簡單的方式進行CPU與NPU的溝通。\n驗收方式是在能夠執行的模擬器上，\n以layer-by-layer與whole model的方式執行。\n模擬器可能是C model或者Virtual Platform之一。"];
+  //node [shape=box]; S5 [label="Stage-5:確認ONNC編譯器的正確性。\n客戶的預選模型都能翻譯成\nCPU與NPU能夠直接執行的library call，\n並且透過簡單的方式進行CPU與NPU的溝通。\n驗收方式是在能夠執行的模擬器上，\n以layer-by-layer與whole model的方式執行。\n模擬器可能是C model或者Virtual Platform之一。"];
+  node [shape=box]; S5 [label="Stage-5:進行CPU與NPU的溝通。\n模擬器上，以layer-by-layer與\nwhole model的方式執行。\n模擬器可能是C model或者\nVirtual Platform之一(??)。"];
   node [shape=box]; Check [label="Stage-6: Double Check"];
 
   Pytorch -> ONNC_FE;
