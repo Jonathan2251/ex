@@ -3,9 +3,10 @@ digraph G {
 
   rankdir=LR;
 
+  label="客戶預的預選模型：BERT-large, DLRM, GPT2-XL, ResNet50";
   subgraph S0 {
     label = "Get Code";
-    node [shape=box]; ONNC_FE [label="ONNC Frontend"]; ONNC_BE [label="ONNC Backend"];
+    node [shape=box]; ONNC_FE [label="ONNC \nFrontend"]; ONNC_BE [label="ONNC \nBackend"];
   }
 
   subgraph S1 {
@@ -19,19 +20,19 @@ digraph G {
 
   subgraph S4 {
     label = "CodeGen";
-    node [shape=box]; BitGen [label="bit-true generator"]; PseudoRunTime [label="ONNC Pseudo Run Time"];
+    node [shape=box]; BitGen [label="bit-true\n generator"]; PseudoRunTime [label="ONNC \nPseudo\n Run Time"];
     node [shape=box]; Simulator;
   }
 
   //node [shape=box]; S5 [label="Stage-5:確認ONNC編譯器的正確性。\n客戶的預選模型都能翻譯成\nCPU與NPU能夠直接執行的library call，\n並且透過簡單的方式進行CPU與NPU的溝通。\n驗收方式是在能夠執行的模擬器上，\n以layer-by-layer與whole model的方式執行。\n模擬器可能是C model或者Virtual Platform之一。"];
-  node [shape=box]; S5 [label="Stage-5:進行CPU與NPU的溝通。\n模擬器上，以layer-by-layer與\nwhole model的方式執行。\n模擬器可能是C model或者\nVirtual Platform之一(??)。"];
-  node [shape=box]; Check [label="Stage-6: Double Check"];
+  node [shape=box]; S5 [label="Stage-5:\n進行CPU與NPU\n的溝通。模擬器\n上，以layer-by-\nlayer與whole\n model的方式執\n行。模擬器可能\n是C model或者\nVirtual Platform\n之一(??)。"];
+  node [shape=box]; Check [label="Stage-6:\nDouble\n Check"]; Calibration [label="Calibration/\nQuantization"]; Simulator [label="SystemC"];
 
   Pytorch -> ONNC_FE;
   Tensorflow -> ONNC_FE;
   ONNX -> ONNC_FE;
   ONNC_FE -> ONNC_BE [label="ONNC-IR"]; // stage 2
-  ONNC_FE -> "CPU/TVM" [label="Subgraph"]; // stage 2
+  ONNC_FE -> "CPU/\nTVM" [label="Subgraph"]; // stage 2
   ONNC_FE -> "NPU" [label="Subgraph"]; // stage 2
 
   ONNC_BE -> BitGen [label="Intrinsic"]; // stage 3
@@ -42,10 +43,10 @@ digraph G {
   Simulator -> Check; // stage 6
   PseudoRunTime -> Check; // stage 6
 
-  "CPU/TVM" -> S5;
+  "CPU/\nTVM" -> S5;
   "NPU" -> S5;
 
-  Simulator -> Calibration [label="result"]; // stage 7
+  Simulator -> Calibration [label="Precision"]; // stage 7
 
   Calibration -> ONNC_FE [style=dashed];
 }
