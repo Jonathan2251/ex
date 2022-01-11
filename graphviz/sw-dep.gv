@@ -1,4 +1,4 @@
-// dot -Tpng sw.gv -o sw.png
+// dot -Tpng sw-dep.gv -o sw-dep.png
 digraph G {
   rankdir=LR;
 
@@ -13,18 +13,18 @@ digraph G {
         shape = "record"
       ];
     node [shape=box,style=filled,color=lightgreen]; 
-      TVMRT [label="TVM/DLR Run time Libraries"]; RISCV;LLVM;TVM; 
+      TVMRT [label="TVM/DLR Run \ntime Libraries"]; RISCV;LLVM;TVM; 
     node [shape=box,style=filled,color=lightyellow]; 
       ONNC; NNAPI [shape=box,color=lightgreen]
 
     node [shape=box,style=filled,color=lightblue];
-      NoteNNLib [label="Dynamic shape, ..., etc, -> better"]; 
-      NoteImperas [label="(MultiPE):configurable, next stage"]; 
+      NoteNNLib [label="Dynamic\n shape, ...,\n etc, -> better"]; 
+      NoteImperas [label="(MultiPE):\nconfigurable,\n next stage"]; 
     node [shape="",style=filled,color=white]; 
 
     Pytorch -> ONNC;
     Tensorflow -> ONNC;
-    ONNX -> ONNC [label="https://github.com/onnx/models (support all?)"];
+    ONNX -> ONNC [label="https://github.com/\nonnx/models ?"];
     ONNC -> TVM;
     ONNC -> NNAPI;
     ONNC -> RunTimeAPI;
