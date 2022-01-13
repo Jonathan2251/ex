@@ -19,8 +19,10 @@ digraph G {
     TLM [label="TLM2.0"];
     node [shape=box,style=filled,color=lightgreen]; 
       Skip [label="..."]; RISCV; 
+    node [shape="",style=filled,color=lightyellow]; 
+      GreenSocs [label="SkymizerVirtual\nPlatform/GreenSocs"];
     node [shape=box,style=filled,color=lightyellow]; 
-      ONNC; GreenSocs [label="SkymizerVirtual\nPlatform/GreenSocs"]; NVDLA;
+      ONNC; NVDLA;
 
     node [shape="",style=filled,color=white]; 
 
