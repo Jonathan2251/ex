@@ -20,7 +20,7 @@ digraph G {
     node [shape=box,style=filled,color=lightgreen]; 
       Skip [label="..."]; RISCV; 
     node [shape=box,style=filled,color=lightyellow]; 
-      ONNC; GreenSocs; NVDLA;
+      ONNC; GreenSocs [label="SkymizerVirtual\nPlatform/GreenSocs"]; NVDLA;
 
     node [shape="",style=filled,color=white]; 
 
