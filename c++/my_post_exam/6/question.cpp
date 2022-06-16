@@ -1,9 +1,4 @@
-// 1. Implement your printi(char **out, int i) to support my_printf("%d\n", 3);
-// 2. The printf("%c\n", 'a'); 
-//      display: $ a (correct)
-//    but printf("%c", 'a');
-//      display: $ a% (a % at tail),
-//    Can you correct this bug.
+// Implement your printi(char **out, int i) to support my_printf("%d\n", 3);
 
 // ascii code:
 //    0    1    2    3 ...    9
@@ -89,8 +84,9 @@ int main() {
 #if 0
   my_printf("a=%d, b=%d\n", a, b);
 #endif
-  //int i = my_printf("%c %c\n", 'a', 'b');
-  int i = my_printf("%c", 'a');
+  int i = my_printf("%c %c\n", 'a', 'b');
+  my_printf("%c\n", i+'0');
+
   return 0;
 }
 

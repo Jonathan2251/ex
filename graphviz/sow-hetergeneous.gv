@@ -1,4 +1,4 @@
-// dot -Tpng sow.gv -o sow.png
+// dot -Tpng sow-hetergeneous.gv -o sow-hetergeneous.png
 digraph G {
 
   rankdir=LR;
@@ -9,9 +9,8 @@ digraph G {
 
   node [shape=box,style=filled,fillcolor=lightyellow]; 
     ONNC_FE [label="ONNC \nFrontend"]; ONNC_BE [label="ONNC \nBackend"];
-    Calibrator [label="Calibration/\nQuantization"];
-    ArchSimu [label="ArchSimu"];
-    NPU [label="bit-true generator\nStage-4:\nNPU:\n確認bit-true generator的\n正確性。客戶的預選模型\n都能翻譯成單核NPU能\n夠直接執行的機器碼。"]; 
+    Calibration [label="Calibration/\nQuantization"];
+    BitGen [label="bit-true\n generator"]; 
     PseudoRunTime [label="ONNC \nPseudo\n Run Time"];
 
   node [shape=box,style=filled,fillcolor=white];
@@ -22,17 +21,14 @@ digraph G {
   Pytorch -> ONNC_FE;
   Tensorflow -> ONNC_FE;
   ONNX -> ONNC_FE;
-  ONNC_FE -> Calibrator; // stage 2
-  Calibrator -> ONNC_BE [label="ONNC-IR"]; // stage 2
-  Calibrator -> ArchSimu; // stage 2
-  ONNC_BE -> "CPU/\nTVM" [label="Subgraph"]; // stage 2
+  ONNC_FE -> ONNC_BE [label="ONNC-IR"]; // stage 2
+  ONNC_FE -> "CPU/\nTVM" [label="Subgraph"]; // stage 2
+  ONNC_FE -> "NPU" [label="Subgraph"]; // stage 2
 
-  ONNC_BE -> NPU [label="Intrinsic &\nSubgraph"]; // stage 4
+  ONNC_BE -> BitGen [label="Intrinsic"]; // stage 3
 
-  "CPU/\nTVM" -> Simulator [label="bin"]; // stage 4
-  NPU -> Simulator [label="bin"]; // stage 4
-  "CPU/\nTVM" -> PseudoRunTime [label="bin"]; // stage 4
-  NPU -> PseudoRunTime [label="bin"]; // stage 4
+  BitGen -> Simulator [label="bin"]; // stage 4
+  BitGen -> PseudoRunTime [label="bin"]; // stage 4
 
   Simulator -> Check; // stage 6
   PseudoRunTime -> Check; // stage 6
@@ -40,5 +36,7 @@ digraph G {
   "CPU/\nTVM" -> S5;
   "NPU" -> S5;
 
-  Simulator -> ONNC_FE [label="Precision"]; // stage 7
+  Simulator -> Calibration [label="Precision"]; // stage 7
+
+  Calibration -> ONNC_FE [style=dashed];
 }
