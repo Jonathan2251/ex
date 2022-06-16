@@ -1,0 +1,41 @@
+﻿RISCV device to support OpenCL
+ https://riscv.org/news/2021/11/open-source-fpga-based-risc-v-gpgpu-that-supports-opencl-1-2-michael-larabel-phoronix/
+ https://www.phoronix.com/scan.php?page=news_item&px=Vortex-RISC-V-GPGPU
+ https://github.com/vortexgpgpu/vortex
+ 
+ https://carrv.github.io/2021/papers/CARRV2021_paper_36_Blaise.pdf
+ 
+ 
+ local installation:
+ fail as follows,
+ /local/Codeplay$ pip3 install numpy h5py pillow
+       File "/tmp/pip-build-65y3wxst/numpy/tools/cythonize.py", line 59, in process_pyx
+        import Cython
+    ModuleNotFoundError: No module named 'Cython'
+    
+    The above exception was the direct cause of the following exception:
+    
+    Traceback (most recent call last):
+      File "/tmp/pip-build-65y3wxst/numpy/tools/cythonize.py", line 240, in <module>
+        main()
+      File "/tmp/pip-build-65y3wxst/numpy/tools/cythonize.py", line 236, in main
+        find_process_files(root_dir)
+      File "/tmp/pip-build-65y3wxst/numpy/tools/cythonize.py", line 227, in find_process_files
+        process(root_dir, fromfile, tofile, function, hash_db)
+      File "/tmp/pip-build-65y3wxst/numpy/tools/cythonize.py", line 193, in process
+        processor_function(fromfile, tofile)
+      File "/tmp/pip-build-65y3wxst/numpy/tools/cythonize.py", line 66, in process_pyx
+        raise OSError(msg) from e
+    OSError: Cython needs to be installed in Python as a module
+    Traceback (most recent call last):
+      File "<string>", line 1, in <module>
+      File "/tmp/pip-build-65y3wxst/numpy/setup.py", line 448, in <module>
+        setup_package()
+      File "/tmp/pip-build-65y3wxst/numpy/setup.py", line 430, in setup_package
+        generate_cython()
+      File "/tmp/pip-build-65y3wxst/numpy/setup.py", line 236, in generate_cython
+        raise RuntimeError("Running cythonize failed!")
+    RuntimeError: Running cythonize failed!
+    
+    ----------------------------------------
+Command "/usr/bin/python3 -u -c "import setuptools, tokenize;__file__='/tmp/pip-build-65y3wxst/numpy/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-hf140hpl-record/install-record.txt --single-version-externally-managed --compile --user --prefix=" failed with error code 1 in /tmp/pip-build-65y3wxst/numpy/

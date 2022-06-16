@@ -1,0 +1,6 @@
+﻿Macos:
+1. Xcode - create new project - macos - Command Line Tool - Product Name: opencl-1 - Language: C
+2. Remove main.c; Copy saxpy.c to opencl-1 project folder; Add file: saxpy.c
+3. In Menu:Product:, Build - Run
+
+http://www.kimicat.com/opencl-1/zai-xcode-zhong-shi-yong-opencl
