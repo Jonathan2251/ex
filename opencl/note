@@ -1,0 +1,5 @@
+// Andes' clang options for RVV:
+Building file: ../src/vadd.c
+Invoking: Andes C Compiler
+riscv64-elf-clang -mext-vector -Og -mcmodel=medium -Wall -mcpu=nx27v -c -fmessage-length=0 -mext-vector -MMD -MP -MF"src/vadd.d" -MT"src/vadd.d src/vadd.o" -o "src/vadd.o" "../src/vadd.c"
+Finished building: ../src/vadd.c
