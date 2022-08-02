@@ -1,3 +1,6 @@
+// ~/llvm/release/build/bin/clang -S -emit-llvm -x cl test.cl
+// ~/llvm/release/build/bin/llc -filetype=asm test.ll
+
 /* Header to make Clang compatible with OpenCL */
 #define __global __attribute__((address_space(1)))
 int get_global_id(int index);
