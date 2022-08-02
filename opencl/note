@@ -3,3 +3,11 @@ Building file: ../src/vadd.c
 Invoking: Andes C Compiler
 riscv64-elf-clang -mext-vector -Og -mcmodel=medium -Wall -mcpu=nx27v -c -fmessage-length=0 -mext-vector -MMD -MP -MF"src/vadd.d" -MT"src/vadd.d src/vadd.o" -o "src/vadd.o" "../src/vadd.c"
 Finished building: ../src/vadd.c
+
+~/git/ex/opencl$ $HOME/riscv/riscv_newlib/bin/clang -O2 -c -march=rv64gv0p10 Gerald-vadd.c  -menable-experimental-extensions
+Gerald-vadd.c:15:30: error: operand must be e[8|16|32|64|128|256|512|1024],m[1|2|4|8|f2|f4|f8],[ta|tu],[ma|mu]
+    __asm__ __volatile__ ( "vsetvli %[vl], %[n], e32, m8" : [vl] "=r"(vl) : [n] "r"(n) );
+                           ^
+<inline asm>:1:18: note: instantiated into assembly here
+        vsetvli a4, a3, e32, m8
+
