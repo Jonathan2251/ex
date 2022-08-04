@@ -48,7 +48,12 @@ private:
   Precision prec;
   T data[4][4];
 public:
-  Mat4() {};
+  Mat4() {
+    Init();
+  }
+  Mat4(T *A) {
+    //data = A;
+  }
   void Init() {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++) {
@@ -66,6 +71,15 @@ public:
       }
     }
     return res;
+  }
+  void print() {
+    for (int i=0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
+        printf("%d ", data[i][j]);
+      }
+      printf("\n");
+    }
+    printf("\n");
   }
 };
 
@@ -123,8 +137,12 @@ int main() {
   A = A*2;
   printf("A: "); A.print();
 
+  //Mat4<int> M1(gA), M2(gA+32), M3(gA+64);
   Mat4<int> M1, M2, M3;
   M1 = M2 * M3; 
+  printf("M1: \n"); M1.print();
+  printf("M2: \n"); M2.print();
+  printf("M3: \n"); M3.print();
 
   return 0;
 }
