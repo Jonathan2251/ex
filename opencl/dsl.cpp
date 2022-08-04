@@ -42,17 +42,21 @@ public:
 // our NNLib
 const Precision bit16 = Bit16;
 
+int t[32] = {
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+};
+
 template <class T>
 class Mat4 {
 private:
   Precision prec;
-  T data[4][4];
+  T *data[4];
 public:
-  Mat4() {
-    Init();
-  }
   Mat4(T *A) {
-    //data = A;
+    data[0] = A;
+    data[1] = A+4;
+    data[2] = A+8;
+    data[3] = A+12;
   }
   void Init() {
     for (int i = 0; i < 4; i++) {
@@ -62,12 +66,16 @@ public:
     }
   }
   Mat4& operator*(const Mat4 &B) {
-    static Mat4 res;
+    static Mat4 res(t);
     res.Init();
     //asm("matmul this->data, B.data");
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++) {
-        res.data[i][j] += data[i][j]*B.data[j][i];
+        int value = 0;
+        for (int k = 0; k < 4; k++) {
+          value += data[i][k]*B.data[k][j];
+        }
+        res.data[i][j] = value;
       }
     }
     return res;
@@ -81,10 +89,6 @@ public:
     }
     printf("\n");
   }
-};
-
-int t[32] = {
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 };
 
 template <class T>
@@ -121,24 +125,29 @@ public:
   }
 };
 
-int gA[128] = {
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+int gV[32*3] = {
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 };
 
+int gM[16*4] = {
+  0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
+  0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
+  0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
+};
+
 int main() {
-  Vec32<int> A(gA), B(gA+32), C(gA+64);
+  Vec32<int> A(gV), B(gV+32), C(gV+64);
   A = B + C;
   printf("B: "); B.print();
   printf("C: "); C.print();
   printf("A: "); A.print();
   A = A*2;
   printf("A: "); A.print();
+  printf("\n\n");
 
-  //Mat4<int> M1(gA), M2(gA+32), M3(gA+64);
-  Mat4<int> M1, M2, M3;
+  Mat4<int> M1(gM), M2(gM+16), M3(gM+32);
   M1 = M2 * M3; 
   printf("M1: \n"); M1.print();
   printf("M2: \n"); M2.print();
