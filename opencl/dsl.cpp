@@ -1,8 +1,9 @@
 // g++ dsl.cpp
-// ~/riscv/riscv_newlib/bin/clang++ dsl.cpp
+// ~/riscv/riscv_newlib/bin/clang++ -march=rv64g dsl.cpp
 // ~/riscv/riscv_linux/bin/clang++ dsl.cpp
 
 #include <cstdio>
+//#include <riscv_vector.h>
 
 enum Precision {
   Bit32,
@@ -117,9 +118,26 @@ public:
     static Vec32<T> res(t);
     //printf("vadd this->data, B.data");
     // inline asm for riscv vadd
+#if 0
+    size_t vl;
+    vuint32m8_t va, vb, vc;
+    __asm__ __volatile__ ( "vsetvli %[vl], %[n], e32, m8" : [vl] "=r"(vl) : [n] "r"(n) );
+#if (__clang_major__ > 10)
+    __asm__ __volatile__ ( "vle32.v %[vb], (%[b])" : [vb] "=vr"(vb) : [b] "r"(b) : "memory" );
+    __asm__ __volatile__ ( "vle32.v %[vc], (%[c])" : [vc] "=vr"(vc) : [c] "r"(c) : "memory" );
+    __asm__ __volatile__ ( "vadd.vv %[va], %[vb], %[vc]" : [va] "=vr"(va) : [vb] "vr"(vb), [vc] "vr"(vc) );
+    __asm__ __volatile__ ( "vse32.v %[va], (%[a])" : [va] "=vr"(va) : [a] "r"(a) : "memory" );
+#else
+    __asm__ __volatile__ ( "vle32.v %[vb], (%[b])" : [vb] "=v8"(vb) : [b] "r"(b) : "memory" );
+    __asm__ __volatile__ ( "vle32.v %[vc], (%[c])" : [vc] "=v8"(vc) : [c] "r"(c) : "memory" );
+    __asm__ __volatile__ ( "vadd.vv %[va], %[vb], %[vc]" : [va] "=v8"(va) : [vb] "v8"(vb), [vc] "v8"(vc) );
+    __asm__ __volatile__ ( "vse32.v %[va], (%[a])" : [va] "=v8"(va) : [a] "r"(a) : "memory" );
+#endif
+#else
     for (int i=0; i < 32; i++) {
       res.data[i] = data[i]+B.data[i];
     }
+#endif
     return res;
   }
   void print() {
