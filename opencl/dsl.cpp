@@ -1,4 +1,6 @@
-// ~/llvm/release/build/bin/clang dsl.cpp
+// g++ dsl.cpp
+// ~/riscv/riscv_newlib/bin/clang++ dsl.cpp
+// ~/riscv/riscv_linux/bin/clang++ dsl.cpp
 
 #include <cstdio>
 
@@ -95,18 +97,21 @@ template <class T>
 class Vec32 {
 private:
   Precision prec;
-  T *data;
 public:
+  T *data;
   Vec32(T *A) {
     data = A;
   }
-  Vec32& operator*(const T scalar) {
+  Vec32& Mul(const T Scalar) {
     static Vec32<T> res(t);
 	// inline asm vadd scalar, this->data
     for (int i=0; i < 32; i++) {
-      res.data[i] = scalar*data[i];
+      res.data[i] = Scalar*data[i];
     }
     return res;
+  }
+  Vec32& operator*(const T Scalar) {
+    return Mul(Scalar);
   } 
   Vec32& operator+(const Vec32 &B) {
     static Vec32<T> res(t);
@@ -125,6 +130,11 @@ public:
   }
 };
 
+template <class T>
+Vec32<T>& operator*(const T Scalar, Vec32<T> &B) {
+  return B * Scalar;
+}
+
 int gV[32*3] = {
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
@@ -139,13 +149,16 @@ int gM[16*4] = {
 
 int main() {
   Vec32<int> A(gV), B(gV+32), C(gV+64);
-  A = B + C;
+  A = 2*B + C;
   printf("B: "); B.print();
   printf("C: "); C.print();
   printf("A: "); A.print();
-  A = A*2;
-  printf("A: "); A.print();
   printf("\n\n");
+
+  // multiply and add, madd
+  // A = B * C + D; 
+  // Solve above by class is not efficient, class does not use madd.
+  // DSL: extend clang to parsing the left and calling A = madd(B,C,D); can get better performance.
 
   Mat4<int> M1(gM), M2(gM+16), M3(gM+32);
   M1 = M2 * M3; 
