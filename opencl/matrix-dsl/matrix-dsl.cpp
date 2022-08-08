@@ -1,6 +1,6 @@
-// g++ dsl.cpp
-// ~/riscv/riscv_newlib/bin/clang++ -march=rv64g dsl.cpp
-// ~/riscv/riscv_linux/bin/clang++ dsl.cpp
+// g++ matrix-dsl.cpp
+// ~/riscv/riscv_newlib/bin/clang++ -march=rv64g matrix-dsl.cpp
+// ~/riscv/riscv_linux/bin/clang++ matrix-dsl.cpp
 
 
 #include "matrix-dsl.h"
