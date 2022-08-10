@@ -1,5 +1,6 @@
 // g++ matrix-dsl.cpp
 // ~/riscv/riscv_newlib/bin/clang++ -march=rv64g matrix-dsl.cpp
+// ~/riscv/git/qemu/build/qemu-riscv64 a.out
 // ~/riscv/riscv_linux/bin/clang++ matrix-dsl.cpp
 
 
