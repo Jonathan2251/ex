@@ -1,4 +1,4 @@
-// ~/riscv/riscv_newlib/bin/clang++ vadd.c  -menable-experimental-extensions -march=rv64gcv0p10 -O0 -mllvm --riscv-v-vector-bits-min=256 -S -emit-llvm : pass
+// pass: ~/riscv/riscv_newlib/bin/clang++ vadd.c  -menable-experimental-extensions -march=rv64gcv0p10 -O0 -mllvm --riscv-v-vector-bits-min=256 -S -v
 // ~/riscv/riscv_newlib/bin/clang++ vadd.c -march=rv64g -O0 -S -emit-llvm : fail as below
 // /local/riscv/riscv_newlib/lib/clang/13.0.1/include/riscv_vector.h:18:2: error: "Vector intrinsics require the vector extension."
 
@@ -10,11 +10,16 @@
 
 #include "common.h"
 
+#define VADD_ASM
+
 // Vector-vector add
 void vadd(uint32_t *a, const uint32_t *b, const uint32_t *c, size_t n) {
   while (n > 0) {
     size_t vl = vsetvl_e32m8(n);
     vuint32m8_t vb = vle32_v_u32m8(b, vl);
+// generate:
+//   vsetvli zero, a0, e32, m8, ta, mu
+//   vadd.vv v8, v8, v16
     vuint32m8_t vc = vle32_v_u32m8(c, vl);
     vuint32m8_t va = vadd(vb, vc, vl);
     vse32(a, va, vl);
@@ -42,13 +47,26 @@ void vadd_mask(uint32_t *a, const uint32_t *b, const uint32_t *c, uint8_t *m, si
   }
 }
 
+#ifdef VADD_ASM
 // Vector-vector add (inline assembly)
 void vadd_asm(uint32_t *a, const uint32_t *b, const uint32_t *c, size_t n) {
   while (n > 0) {
     size_t vl;
     vuint32m8_t va, vb, vc;
+#if 0
+    // origin
     __asm__ __volatile__ ( "vsetvli %[vl], %[n], e32, m8" : [vl] "=r"(vl) : [n] "r"(n) );
+// Fail:
+// vadd.c:58:28: error: operand must be e[8|16|32|64|128|256|512|1024],m[1|2|4|8|f2|f4|f8],[ta|tu],[ma|mu]
+//    __asm__ __volatile__ ( "vsetvli %[vl], %[n], e32, m8" : [vl] "=r"(vl) : [n] "r"(n) );
+//                           ^
+// <inline asm>:1:18: note: instantiated into assembly here
+//         vsetvli a0, a0, e32, m8
+//                         ^
+#else
     //__asm__ __volatile__ ( "vsetvli %[vl], %[512], e32, m8" : [vl] "=r"(vl) : [512] "r"(512) );
+// Fail: same as above
+#endif
 #if (__clang_major__ > 10)
     __asm__ __volatile__ ( "vle32.v %[vb], (%[b])" : [vb] "=vr"(vb) : [b] "r"(b) : "memory" );
     __asm__ __volatile__ ( "vle32.v %[vc], (%[c])" : [vc] "=vr"(vc) : [c] "r"(c) : "memory" );
@@ -67,6 +85,7 @@ void vadd_asm(uint32_t *a, const uint32_t *b, const uint32_t *c, size_t n) {
     n -= vl;
   }
 }
+#endif
 
 uint32_t a[4096];
 uint8_t m[512];
@@ -99,8 +118,10 @@ int main(void) {
   for (size_t i = 0; i < 4096; ++i)
     assert(a[i] == i * 4);
 
+#ifdef VADD_ASM
   //vadd_asm(a, a, a, array_size(a));
   vadd_asm(a, a, a, 4096);
+#endif
 
   //for (size_t i = 0; i < array_size(a); ++i)
   for (size_t i = 0; i < 4096; ++i)

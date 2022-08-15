@@ -39,6 +39,7 @@ uint16_t via[4];
 
 int main(void) {
   enable_mstatus_vs();
+#if 0
   // init source
   for (size_t i = 0; i < array_size(a); ++i)
     a[i] = i;
@@ -56,8 +57,11 @@ int main(void) {
     m[i] = 255;
   for (size_t i = 0; i < array_size(a); ++i)
     assert(a[i] == i * 4);
-  vadd_asm(a, a, a, array_size(a));
-  for (size_t i = 0; i < array_size(a); ++i)
+#endif
+  //vadd_asm(a, a, a, array_size(a));
+  vadd_asm(a, a, a, 4096*4);
+  //for (size_t i = 0; i < array_size(a); ++i)
+  for (size_t i = 0; i < 4096*4; ++i)
     assert(a[i] == i * 8);
   printf("The results of vadd_asm:\tPASS\n");
   return 0;
