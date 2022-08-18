@@ -1,16 +1,19 @@
-// g++ matrix-dsl.cpp
-// ~/riscv/riscv_newlib/bin/clang++ -march=rv64g matrix-dsl.cpp
-// ~/riscv/git/qemu/build/qemu-riscv64 a.out
-// ~/riscv/riscv_linux/bin/clang++ matrix-dsl.cpp
-
+// ~/riscv/riscv_newlib/bin/clang++ matrix-dsl.cpp -menable-experimental-extensions -march=rv64gcv0p10 -O0 -mllvm --riscv-v-vector-bits-min=256 -v
+// ~/riscv/git/qemu/build/qemu-riscv64 -cpu rv64,v=true a.out
+// ~/riscv/riscv_newlib/bin/riscv64-unknown-elf-objdump -d a.out|grep vmul
 
 #include "matrix-dsl.h"
-#include <cstdio>
-//#include <riscv_vector.h>
+#include <assert.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <riscv_vector.h>
+
+#define USE_RVV
 
 const Precision bit16 = Bit16;
 
-int t[32] = {
+uint32_t t[32] = {
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 };
 
@@ -67,10 +70,16 @@ Vec32<T>::Vec32(T *A) {
 template <class T>
 Vec32<T>& Vec32<T>::Mul(const T Scalar) {
   static Vec32<T> res(t);
-// inline asm vadd scalar, this->data
+#ifdef USE_RVV
+  size_t vl = vsetvl_e32m8(32);
+  vuint32m8_t vb = vle32_v_u32m8(data, vl);
+  vuint32m8_t va = vmul(vb, Scalar, vl);
+  vse32(res.data, va, vl);
+#else
   for (int i=0; i < 32; i++) {
     res.data[i] = Scalar*data[i];
   }
+#endif
   return res;
 }
 
@@ -80,28 +89,17 @@ Vec32<T>& Vec32<T>::operator*(const T Scalar) {
 } 
 
 template <class T>
-Vec32<T>& Vec32<T>::operator+(const Vec32 &B) {
+Vec32<T>& Vec32<T>::operator+(const Vec32 &arg) {
   static Vec32<T> res(t);
-  //printf("vadd this->data, B.data");
-  // inline asm for riscv vadd
-#if 0
-  size_t vl;
-  vuint32m8_t va, vb, vc;
-  __asm__ __volatile__ ( "vsetvli %[vl], %[n], e32, m8" : [vl] "=r"(vl) : [n] "r"(n) );
-#if (__clang_major__ > 10)
-  __asm__ __volatile__ ( "vle32.v %[vb], (%[b])" : [vb] "=vr"(vb) : [b] "r"(b) : "memory" );
-  __asm__ __volatile__ ( "vle32.v %[vc], (%[c])" : [vc] "=vr"(vc) : [c] "r"(c) : "memory" );
-  __asm__ __volatile__ ( "vadd.vv %[va], %[vb], %[vc]" : [va] "=vr"(va) : [vb] "vr"(vb), [vc] "vr"(vc) );
-  __asm__ __volatile__ ( "vse32.v %[va], (%[a])" : [va] "=vr"(va) : [a] "r"(a) : "memory" );
-#else
-  __asm__ __volatile__ ( "vle32.v %[vb], (%[b])" : [vb] "=v8"(vb) : [b] "r"(b) : "memory" );
-  __asm__ __volatile__ ( "vle32.v %[vc], (%[c])" : [vc] "=v8"(vc) : [c] "r"(c) : "memory" );
-  __asm__ __volatile__ ( "vadd.vv %[va], %[vb], %[vc]" : [va] "=v8"(va) : [vb] "v8"(vb), [vc] "v8"(vc) );
-  __asm__ __volatile__ ( "vse32.v %[va], (%[a])" : [va] "=v8"(va) : [a] "r"(a) : "memory" );
-#endif
+#ifdef USE_RVV
+  size_t vl = vsetvl_e32m8(32);
+  vuint32m8_t vb = vle32_v_u32m8(data, vl);
+  vuint32m8_t vc = vle32_v_u32m8(arg.data, vl);
+  vuint32m8_t va = vadd(vb, vc, vl);
+  vse32(res.data, va, vl);
 #else
   for (int i=0; i < 32; i++) {
-    res.data[i] = data[i]+B.data[i];
+    res.data[i] = data[i]+arg.data[i];
   }
 #endif
   return res;
@@ -120,21 +118,22 @@ Vec32<T>& operator*(const T Scalar, Vec32<T> &B) {
   return B * Scalar;
 }
 
-int gV[32*3] = {
+uint32_t gV[32*3] = {
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 };
 
-int gM[16*4] = {
+uint32_t gM[16*4] = {
   0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
   0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
   0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
 };
 
 int main() {
-  Vec32<int> A(gV), B(gV+32), C(gV+64);
-  A = 2*B + C;
+  Vec32<uint32_t> A(gV), B(gV+32), C(gV+64);
+  uint32_t alpha = (uint32_t)2;
+  A = alpha*B + C;
   printf("B: "); B.Print();
   printf("C: "); C.Print();
   printf("A: "); A.Print();
@@ -145,7 +144,7 @@ int main() {
   // Solve above by class is not efficient, class does not use madd.
   // DSL: extend clang to parsing the left and calling A = madd(B,C,D); can get better performance.
 
-  Mat4<int> M1(gM), M2(gM+16), M3(gM+32);
+  Mat4<uint32_t> M1(gM), M2(gM+16), M3(gM+32);
   M1 = M2 * M3; 
   printf("M1: \n"); M1.Print();
   printf("M2: \n"); M2.Print();
