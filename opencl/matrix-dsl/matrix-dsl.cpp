@@ -1,4 +1,5 @@
-// ~/riscv/riscv_newlib/bin/clang++ matrix-dsl.cpp -menable-experimental-extensions -march=rv64gcv0p10 -O0 -mllvm --riscv-v-vector-bits-min=256 -v
+/* ~/riscv/riscv_newlib/bin/clang++ matrix-dsl.cpp -menable-experimental-extensions \
+-march=rv64gcv0p10 -O0 -mllvm --riscv-v-vector-bits-min=256 -v */
 // ~/riscv/git/qemu/build/qemu-riscv64 -cpu rv64,v=true a.out
 // ~/riscv/riscv_newlib/bin/riscv64-unknown-elf-objdump -d a.out|grep vmul
 
