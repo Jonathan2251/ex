@@ -54,7 +54,8 @@
 #  6. -Wl,--start-group \   changed to  -Wl, \
 #  7  -Wl,--end-group    changed to  -Wl,
 
-LLVM_SRC_PATH := $HOME/llvm/10.0.0/release/src
+LLVM_SRC_PATH := $(HOME)/llvm/release/llvm
+CLANG_SRC_PATH := $(HOME)/llvm/release/clang
 
 # LLVM_BUILD_PATH is the directory in which you built LLVM - where you ran
 # configure or cmake.
@@ -63,7 +64,7 @@ LLVM_SRC_PATH := $HOME/llvm/10.0.0/release/src
 # process. It should contain the tools like opt, llc and clang. The default
 # reflects a release build with CMake and Ninja. binary build of LLVM, point it
 # to the bin/ directory.
-LLVM_BUILD_PATH := $HOME/llvm/10.0.0/release/build-cb
+LLVM_BUILD_PATH := $(HOME)/llvm/release/build
 LLVM_BIN_PATH 	:= $(LLVM_BUILD_PATH)/bin
 
 $(info -----------------------------------------------)
@@ -89,7 +90,7 @@ PLUGIN_LDFLAGS := -shared
 # These are required when compiling vs. a source distribution of Clang. For
 # binary distributions llvm-config --cxxflags gives the right path.
 CLANG_INCLUDES := \
-	-I$(LLVM_SRC_PATH)/tools/clang/include \
+	-I$(CLANG_SRC_PATH)/include \
 	-I$(LLVM_BUILD_PATH)/tools/clang/include
 
 # List of Clang libraries to link. The proper -L will be provided by the

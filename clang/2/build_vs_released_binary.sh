@@ -15,11 +15,11 @@
 set -eu
 set -x
 
-BINARY_DIR_PATH=${BINARY_DIR_PATH:-$HOME/llvm/10.0.0/release/build-cb}
+BINARY_DIR_PATH=${BINARY_DIR_PATH:-$HOME/llvm/release/build}
 echo "BINARY_DIR_PATH: " ${BINARY_DIR_PATH}
 
 make -j8 \
   CXX=$BINARY_DIR_PATH/bin/clang++ \
-  LLVM_SRC_PATH=$HOME/llvm/10.0.0/release/src \
+  LLVM_SRC_PATH=$HOME/llvm/release/llvm \
   LLVM_BUILD_PATH=$BINARY_DIR_PATH \
   LLVM_BIN_PATH=$BINARY_DIR_PATH/bin
