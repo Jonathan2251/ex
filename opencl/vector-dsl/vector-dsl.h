@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <stddef.h>
+#include <stdio.h>
 
 enum Precision {
   Bit32,
