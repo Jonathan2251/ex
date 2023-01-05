@@ -54,8 +54,8 @@
 #  6. -Wl,--start-group \   changed to  -Wl, \
 #  7  -Wl,--end-group    changed to  -Wl,
 
-LLVM_SRC_PATH := $(HOME)/llvm/release/llvm
-CLANG_SRC_PATH := $(HOME)/llvm/release/clang
+LLVM_SRC_PATH := $(HOME)/llvm/debug/llvm
+CLANG_SRC_PATH := $(HOME)/llvm/debug/clang
 
 # LLVM_BUILD_PATH is the directory in which you built LLVM - where you ran
 # configure or cmake.
@@ -64,7 +64,7 @@ CLANG_SRC_PATH := $(HOME)/llvm/release/clang
 # process. It should contain the tools like opt, llc and clang. The default
 # reflects a release build with CMake and Ninja. binary build of LLVM, point it
 # to the bin/ directory.
-LLVM_BUILD_PATH := $(HOME)/llvm/release/build
+LLVM_BUILD_PATH := $(HOME)/llvm/debug/build
 LLVM_BIN_PATH 	:= $(LLVM_BUILD_PATH)/bin
 
 $(info -----------------------------------------------)
